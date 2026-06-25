@@ -1,136 +1,224 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Redbrick dashboards for service status and Grafana." />
-  <meta name="theme-color" content="#a71e22" />
-  <meta property="og:title" content="Redbrick Dashboards" />
-  <meta property="og:description" content="Redbrick service status and Grafana dashboards." />
-  <meta property="og:image" content="https://redbrick.dcu.ie/assets/favicon.ico" />
-  <meta property="og:url" content="https://status.redbrick.dcu.ie" />
-  <meta name="twitter:card" content="summary" />
-  <link rel="icon" href="https://redbrick.dcu.ie/assets/favicon.ico" type="image/x-icon" />
-  <title>Redbrick Dashboards</title>
-  <style>
-    :root {
-      --bg: #0b0f15;
-      --panel: #131a24;
-      --text: #e5eaf3;
-      --muted: #99a3b5;
-      --active: #a71e22;
-      --border: #2a3342;
-    }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Redbrick dashboards for service status and Grafana."
+    />
+    <meta name="theme-color" content="#a71e22" />
+    <meta property="og:title" content="Redbrick Dashboards" />
+    <meta
+      property="og:description"
+      content="Redbrick service status and Grafana dashboards."
+    />
+    <meta
+      property="og:image"
+      content="https://redbrick.dcu.ie/assets/favicon.ico"
+    />
+    <meta property="og:url" content="https://status.redbrick.dcu.ie" />
+    <meta name="twitter:card" content="summary" />
+    <link
+      rel="icon"
+      href="https://redbrick.dcu.ie/assets/favicon.ico"
+      type="image/x-icon"
+    />
+    <title>Redbrick Dashboards</title>
+    <style>
+      :root {
+        --bg: #0b0f15;
+        --panel: #131a24;
+        --text: #e5eaf3;
+        --muted: #99a3b5;
+        --active: #a71e22;
+        --border: #2a3342;
+        --active-hover: #ab3232;
+      }
 
-    * {
-      box-sizing: border-box;
-    }
+      * {
+        box-sizing: border-box;
+      }
 
-    html,
-    body {
-      margin: 0;
-      height: 100%;
-      width: 100%;
-      background: var(--bg);
-      color: var(--text);
-      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        width: 100%;
+        background: var(--bg);
+        color: var(--text);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
 
-    .app {
-      height: 100dvh;
-      display: flex;
-      flex-direction: column;
-    }
+      .app {
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+      }
 
-    .tabs {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 8px;
-      background: var(--panel);
-      border-bottom: 1px solid var(--border);
-    }
+      .tabs {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px;
+        background: var(--panel);
+        border-bottom: 1px solid var(--border);
+      }
 
-    .tab {
-      appearance: none;
-      border: 1px solid var(--border);
-      background: transparent;
-      color: var(--muted);
-      padding: 8px 12px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-      transition: 120ms ease;
-    }
+      .tab {
+        appearance: none;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--muted);
+        padding: 8px 12px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        transition: 120ms ease;
+      }
 
-    .tab:hover {
-      color: var(--text);
-      border-color: #3b4659;
-    }
+      .tab:hover {
+        color: var(--text);
+        border-color: #3b4659;
+      }
 
-    .tab.active {
-      background: var(--active);
-      color: #fff;
-      border-color: var(--active);
-    }
+      .tab.active {
+        background: var(--active);
+        color: #fff;
+        border-color: var(--active);
+      }
 
-    .frame-wrap {
-      flex: 1;
-      min-height: 0;
-    }
+      .frame-wrap {
+        flex: 1;
+        min-height: 0;
+      }
 
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      display: block;
-      background: #fff;
-    }
-  </style>
-</head>
-<body>
-  <div class="app">
-    <nav class="tabs" aria-label="Dashboard Tabs">
-      <button class="tab active" data-src="https://gatus.redbrick.dcu.ie" type="button">Status</button>
-      <button class="tab" data-src="https://grafana.redbrick.dcu.ie/public-dashboards/987d66f2bf304c99afed7efa10f185ed" type="button">Servers</button>
-    </nav>
+      iframe {
+        width: 100%;
+        height: 100%;
+        border: 0;
+        display: block;
+        background: #fff;
+      }
 
-    <main class="frame-wrap">
-      <iframe
-        id="dashboard-frame"
-        title="Redbrick Dashboard"
-        src="https://gatus.redbrick.dcu.ie"
-        loading="eager"
-        referrerpolicy="no-referrer"
-      ></iframe>
-    </main>
-  </div>
+      #warning-popup {
+        transition: box-shadow 0.2s ease;
+        position: fixed;
+        top: 10px;
+        right: 10px;
+        background-color: var(--active);
+        color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+      }
 
-  <script>
-    const tabs = document.querySelectorAll('.tab');
-    const frame = document.getElementById('dashboard-frame');
+      #warning-popup a {
+        color: #fff;
+      }
 
-    tabs.forEach((tab) => {
-      tab.addEventListener('click', () => {
-        const nextSrc = tab.dataset.src;
-        if (!nextSrc) {
-          return;
-        }
+      #warning-popup:hover {
+        z-index: 1000;
+        cursor: pointer;
+        box-shadow: 0 4px 6px rgba(0, 0, 0);
+        background-color: var(--active-hover);
+      }
+    </style>
+  </head>
 
-        if (tab.dataset.external === 'true') {
-          window.open(nextSrc, '_blank', 'noopener,noreferrer');
-          return;
-        }
+  <body>
+    <div class="app">
+      <nav class="tabs" aria-label="Dashboard Tabs">
+        <button
+          class="tab active"
+          data-src="https://gatus.redbrick.dcu.ie"
+          type="button"
+        >
+          Status
+        </button>
+        <button
+          class="tab"
+          data-src="https://grafana.redbrick.dcu.ie/public-dashboards/987d66f2bf304c99afed7efa10f185ed"
+          type="button"
+        >
+          Servers
+        </button>
+      </nav>
 
-        if (frame.src === nextSrc) {
-          return;
-        }
+      <main class="frame-wrap">
+        <iframe
+          id="dashboard-frame"
+          title="Redbrick Dashboard"
+          src="https://gatus.redbrick.dcu.ie"
+          loading="eager"
+          referrerpolicy="no-referrer"
+        ></iframe>
+      </main>
+    </div>
 
-        tabs.forEach((t) => t.classList.remove('active'));
-        tab.classList.add('active');
-        frame.src = nextSrc;
+    <script>
+      const tabs = document.querySelectorAll(".tab");
+      const frame = document.getElementById("dashboard-frame");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          const nextSrc = tab.dataset.src;
+          if (!nextSrc) {
+            return;
+          }
+
+          if (tab.dataset.external === "true") {
+            window.open(nextSrc, "_blank", "noopener,noreferrer");
+            return;
+          }
+
+          if (frame.src === nextSrc) {
+            return;
+          }
+
+          tabs.forEach((t) => t.classList.remove("active"));
+          tab.classList.add("active");
+          frame.src = nextSrc;
+        });
       });
-    });
-  </script>
-</body>
+
+      // Try to fetch both dashboards to check if they are reachable, and if not, issue a warning in the console.
+      const tabsToCheck = document.getElementsByClassName("tab");
+      for (const tab of tabsToCheck) {
+        const url = tab.dataset.src;
+        fetch(url, { method: "HEAD" })
+          .then((response) => {
+            if (!response.ok) {
+              console.warn(
+                `Warning: Dashboard at ${url} is not reachable. Status: ${
+                  response.status
+                }`,
+              );
+              console.log("AAAAAAAAAAAA");
+            }
+          })
+          .catch((error) => {
+            console.error(`Error fetching dashboard at ${url}:`, error);
+
+            // Create a warning popup in the webpage to tell users to check the discord
+
+            if (document.getElementById("warning-popup")) {
+              return; // Don't create multiple popups
+            }
+            const warningPopup = document.createElement("div");
+            warningPopup.id = "warning-popup";
+            warningPopup.innerHTML = `Warning: A Dashboard is not reachable. Please
+  check the <a href="https://discord.redbrick.dcu.ie/">Redbrick Discord</a> for updates.`;
+            document.body.appendChild(warningPopup);
+
+            warningPopup.addEventListener("click", (e) => {
+              if (e.target.tagName === "A") {
+                return;
+              }
+
+              warningPopup.remove();
+            });
+          });
+      }
+    </script>
+  </body>
 </html>
